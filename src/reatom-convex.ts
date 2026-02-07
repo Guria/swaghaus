@@ -85,7 +85,7 @@ export const createReatomConvex = (
               );
             } else {
               isServerAuthenticated.set(false);
-              client().clearAuth();
+              client().client.clearAuth();
             }
           }
         },
@@ -96,7 +96,7 @@ export const createReatomConvex = (
 
   const clearAuth = () => {
     isServerAuthenticated.set(false);
-    client().clearAuth();
+    client().client.clearAuth();
   };
 
   const reatomQuery = <Query extends FunctionReference<"query">>(
