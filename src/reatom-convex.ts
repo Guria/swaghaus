@@ -12,6 +12,7 @@ import {
   wrap,
   withConnectHook,
   type Atom,
+  named,
 } from "@reatom/core";
 import { reatomInstance } from "./reatomInstance";
 
@@ -119,15 +120,14 @@ export const createReatomConvex = (
   const reatomQuery = <Query extends FunctionReference<"query">>(
     query: Query,
     argsFn: () => FunctionArgs<Query>,
-    name?: string,
+    name: string = named('convexQuery'),
   ) => {
-    const queryName = name ?? `convexQuery:${String(query)}`;
-    const args = computed(argsFn, `${queryName}.args`);
+    const args = computed(argsFn, `${name}.args`);
     const result = atom<Query["_returnType"] | undefined>(
       undefined,
-      queryName,
+      name,
     ).extend(() => {
-      const error = atom<unknown | null>(null, `${queryName}.error`);
+      const error = atom<unknown | null>(null, `${name}.error`);
       return { error };
     });
     result.extend(
@@ -158,7 +158,7 @@ export const createReatomConvex = (
             result.error.set(error);
             result.set(undefined);
           }
-        }, `${queryName}.effect`);
+        }, `${name}.effect`);
 
         return () => {
           if (unsubscribe) {
@@ -174,25 +174,23 @@ export const createReatomConvex = (
 
   const reatomMutation = <Mutation extends FunctionReference<"mutation">>(
     mutation: Mutation,
-    name?: string,
+    name: string = named('convexMutation'),
   ) => {
-    const mutationName = name ?? `convexMutation:${String(mutation)}`;
     return action(
       (args: FunctionArgs<Mutation>): Promise<FunctionReturnType<Mutation>> =>
         client().mutation(mutation, args),
-      mutationName,
+      name,
     );
   };
 
   const reatomAction = <Action extends FunctionReference<"action">>(
     convexAction: Action,
-    name?: string,
+    name: string = named('convexAction'),
   ) => {
-    const actionName = name ?? `convexAction:${String(convexAction)}`;
     return action(
       (args: FunctionArgs<Action>): Promise<FunctionReturnType<Action>> =>
         client().action(convexAction, args),
-      actionName,
+      name,
     );
   };
 
