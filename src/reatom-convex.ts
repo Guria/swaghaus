@@ -89,11 +89,13 @@ export const createReatomConvex = (
               );
             } else {
               authVersion++;
-              isServerAuthenticated.set(false);
               try {
                 client().client.clearAuth();
+                isServerAuthenticated.set(false);
               } catch (error) {
                 console.error("Failed to clear auth:", error);
+                // Don't update isServerAuthenticated if clearAuth failed
+                // to avoid UI showing logged out while client is still authenticated
               }
             }
           }
@@ -105,11 +107,12 @@ export const createReatomConvex = (
 
   const clearAuth = () => {
     authVersion++;
-    isServerAuthenticated.set(false);
     try {
       client().client.clearAuth();
+      isServerAuthenticated.set(false);
     } catch (error) {
       console.error("Failed to clear auth:", error);
+      throw error; // Re-throw to let caller handle the failure
     }
   };
 
@@ -118,7 +121,7 @@ export const createReatomConvex = (
     argsFn: () => FunctionArgs<Query>,
     name?: string,
   ) => {
-    const queryName = name ?? "convexQuery";
+    const queryName = name ?? `convexQuery:${String(query)}`;
     const args = computed(argsFn, `${queryName}.args`);
     const result = atom<Query["_returnType"] | undefined>(
       undefined,
@@ -173,7 +176,7 @@ export const createReatomConvex = (
     mutation: Mutation,
     name?: string,
   ) => {
-    const mutationName = name ?? "convexMutation";
+    const mutationName = name ?? `convexMutation:${String(mutation)}`;
     return action(
       (args: FunctionArgs<Mutation>): Promise<FunctionReturnType<Mutation>> =>
         client().mutation(mutation, args),
@@ -185,7 +188,7 @@ export const createReatomConvex = (
     convexAction: Action,
     name?: string,
   ) => {
-    const actionName = name ?? "convexAction";
+    const actionName = name ?? `convexAction:${String(convexAction)}`;
     return action(
       (args: FunctionArgs<Action>): Promise<FunctionReturnType<Action>> =>
         client().action(convexAction, args),
