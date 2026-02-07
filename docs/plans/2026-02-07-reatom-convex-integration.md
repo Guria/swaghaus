@@ -76,10 +76,10 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 - Create: `src/reusables/convex/reatom-convex.example.ts`
 - Create: `src/reusables/convex/reatom-convex.md`
 
-- [ ] Create meta file with name: 'reatomConvex', type: 'reatom:integration', files list, and registryDependencies: ['reatomInstance'] + npmDependencies for convex
-- [ ] Create example showing: setting up auth state atom, creating convex integration, using reatomQuery with reactive args, using reatomMutation
-- [ ] Create documentation with function signatures, parameter tables, auth flow explanation, and usage patterns
-- [ ] Run jsrepo build to verify meta is picked up correctly
+- [x] Create meta file with name: 'reatomConvex', type: 'reatom:integration', files list, and registryDependencies: ['reatomInstance'] + npmDependencies for convex
+- [x] Create example showing: setting up auth state atom, creating convex integration, using reatomQuery with reactive args, using reatomMutation
+- [x] Create documentation with function signatures, parameter tables, auth flow explanation, and usage patterns
+- [x] Run jsrepo build to verify meta is picked up correctly
 
 ## Task 5: Update swaghaus to use reusable
 
