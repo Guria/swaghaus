@@ -1,14 +1,10 @@
-import { authClientAtom } from "./convex-client";
+import { signOut } from "./convex-client";
 
 export const Logout = () => {
   return (
     <button
       className="btn"
-      on:click={() =>
-        authClientAtom
-          .data()
-          ?.logout({ logoutParams: { returnTo: window.location.origin } })
-      }
+      on:click={() => void signOut()}
     >
       Log out
     </button>

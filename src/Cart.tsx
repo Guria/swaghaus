@@ -1,12 +1,13 @@
 import { api } from "../convex/_generated/api";
 import { CartItem as CartItem } from "./CartItem";
-import { authClientAtom, reatomQuery } from "./convex-client";
+import { client, ensureAuthClient, reatomQuery } from "./convex-client";
 import { computed, withAsyncData } from "@reatom/core";
 
 export const Cart = () => {
   const user = computed(async () => {
-    const client = authClientAtom.data();
-    return client ? await client.getUser() : undefined;
+    if (!client.isAuthenticated()) return undefined;
+    const auth0Client = await ensureAuthClient();
+    return auth0Client.getUser();
   }).extend(withAsyncData());
   const cartItems = reatomQuery(api.cart.list, () => ({}));
 

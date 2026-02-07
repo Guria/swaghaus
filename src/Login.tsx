@@ -1,10 +1,10 @@
-import { authClientAtom } from "./convex-client";
+import { signIn } from "./convex-client";
 
 export const Login = () => {
   return (
     <button
       className="btn"
-      on:click={() => authClientAtom.data()?.loginWithRedirect()}
+      on:click={() => void signIn()}
     >
       Sign in
     </button>
