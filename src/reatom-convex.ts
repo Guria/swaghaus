@@ -90,7 +90,11 @@ export const createReatomConvex = (
             } else {
               authVersion++;
               isServerAuthenticated.set(false);
-              client().client.clearAuth();
+              try {
+                client().client.clearAuth();
+              } catch (error) {
+                console.error("Failed to clear auth:", error);
+              }
             }
           }
         },
@@ -102,7 +106,11 @@ export const createReatomConvex = (
   const clearAuth = () => {
     authVersion++;
     isServerAuthenticated.set(false);
-    client().client.clearAuth();
+    try {
+      client().client.clearAuth();
+    } catch (error) {
+      console.error("Failed to clear auth:", error);
+    }
   };
 
   const reatomQuery = <Query extends FunctionReference<"query">>(
@@ -129,19 +137,24 @@ export const createReatomConvex = (
             unsubscribe = null;
           }
 
-          const unsub = client().onUpdate(
-            query,
-            nextArgs,
-            wrap((data) => {
-              result.error.set(null);
-              result.set(data);
-            }),
-            wrap((error) => {
-              result.error.set(error);
-              result.set(undefined);
-            }),
-          );
-          unsubscribe = () => unsub();
+          try {
+            const unsub = client().onUpdate(
+              query,
+              nextArgs,
+              wrap((data) => {
+                result.error.set(null);
+                result.set(data);
+              }),
+              wrap((error) => {
+                result.error.set(error);
+                result.set(undefined);
+              }),
+            );
+            unsubscribe = () => unsub();
+          } catch (error) {
+            result.error.set(error);
+            result.set(undefined);
+          }
         }, `${queryName}.effect`);
 
         return () => {
