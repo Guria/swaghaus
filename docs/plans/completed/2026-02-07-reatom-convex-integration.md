@@ -106,6 +106,6 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 
 ## Cleanup
 
-- [ ] Move this plan to `docs/plans/completed/`
+- [x] Move this plan to `docs/plans/completed/`
 
 
