@@ -59,15 +59,15 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 **Files:**
 - Create: `src/reusables/convex/reatom-convex.ts`
 
-- [ ] Export AuthProviderState type (isLoading, isAuthenticated, fetchAccessToken)
-- [ ] Implement reatomConvexClient(url, name?) using reatomInstance import
-- [ ] Implement createReatomConvex(url, authProviderState) returning { client, clearAuth, reatomQuery, reatomMutation, reatomAction }
+- [x] Export AuthProviderState type (isLoading, isAuthenticated, fetchAccessToken)
+- [x] Implement reatomConvexClient(url, name?) using reatomInstance import
+- [x] Implement createReatomConvex(url, authProviderState) returning { client, clearAuth, reatomQuery, reatomMutation, reatomAction }
   - client: wraps reatomConvexClient with withConnectHook for auth state subscription, exposes isAuthenticated computed
   - reatomQuery: reactive args via computed, effect-based subscription to ConvexClient.onUpdate, error atom, connect/disconnect lifecycle
   - reatomMutation: action wrapping client().mutation()
   - reatomAction: action wrapping client().action()
   - clearAuth: resets isServerAuthenticated and calls client.clearAuth()
-- [ ] Run tests from Task 2 - must pass
+- [x] Run tests from Task 2 - must pass
 
 ## Task 4: Create jsrepo meta, example, and documentation
 
