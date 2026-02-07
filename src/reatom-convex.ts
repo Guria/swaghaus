@@ -71,19 +71,24 @@ export const createReatomConvex = (
     return serverAuthenticated === true;
   });
 
+  let authVersion = 0;
   const client = reatomConvexClient(url).extend(
     withConnectHook((client) => {
       return authProviderState.subscribe(
         ({ fetchAccessToken, isAuthenticated, isLoading }) => {
           if (!isLoading) {
             if (isAuthenticated) {
+              const currentVersion = ++authVersion;
               client().setAuth(
                 fetchAccessToken,
                 (backendReportsIsAuthenticated) => {
-                  isServerAuthenticated.set(backendReportsIsAuthenticated);
+                  if (currentVersion === authVersion) {
+                    isServerAuthenticated.set(backendReportsIsAuthenticated);
+                  }
                 },
               );
             } else {
+              authVersion++;
               isServerAuthenticated.set(false);
               client().client.clearAuth();
             }

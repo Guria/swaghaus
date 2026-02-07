@@ -61,7 +61,8 @@ const syncAuthProviderState = async (auth0Client: Auth0Client) => {
         })) as GetTokenSilentlyVerboseResponse;
         assert(response, "Failed to fetch access token");
         return response.id_token;
-      } catch {
+      } catch (error) {
+        console.error("Failed to fetch access token:", error);
         return null;
       }
     },
@@ -72,9 +73,15 @@ let authClientPromise: Promise<Auth0Client> | null = null;
 
 const createClient = async () => {
   const { createAuth0Client } = await import("@auth0/auth0-spa-js");
+
+  const auth0Domain = import.meta.env.VITE_AUTH0_DOMAIN;
+  const auth0ClientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
+  assert(auth0Domain, "VITE_AUTH0_DOMAIN is not defined");
+  assert(auth0ClientId, "VITE_AUTH0_CLIENT_ID is not defined");
+
   const auth0Client = await createAuth0Client({
-    domain: import.meta.env.VITE_AUTH0_DOMAIN!,
-    clientId: import.meta.env.VITE_AUTH0_CLIENT_ID!,
+    domain: auth0Domain,
+    clientId: auth0ClientId,
     // Keep auth state stable across redirects and client re-instantiation.
     useRefreshTokens: true,
     cacheLocation: "localstorage",
