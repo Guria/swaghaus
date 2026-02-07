@@ -100,6 +100,12 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 - [x] Verify reatomConvexClient properly depends on reatomInstance via import
 - [x] Run `npm run build` in swaghaus - app compiles
 
+## TESTS
+- [ ] use https://docs.convex.dev/testing https://docs.convex.dev/testing/convex-test https://docs.convex.dev/testing/convex-backend
+
+
 ## Cleanup
 
-- [x] Move this plan to `docs/plans/completed/`
+- [ ] Move this plan to `docs/plans/completed/`
+
+

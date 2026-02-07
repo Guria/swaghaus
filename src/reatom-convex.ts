@@ -100,6 +100,7 @@ export const createReatomConvex = (
   );
 
   const clearAuth = () => {
+    authVersion++;
     isServerAuthenticated.set(false);
     client().client.clearAuth();
   };
