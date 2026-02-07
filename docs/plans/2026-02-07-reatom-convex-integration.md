@@ -94,11 +94,11 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 
 ## Verification
 
-- [ ] Run `pnpm test` in reatom/reusables - all tests pass
-- [ ] Run `pnpm run jsrepo:build` - registry includes reatomConvex
-- [ ] Verify reatom-convex.ts has no app-specific imports (no Auth0, no env vars, no Vite)
-- [ ] Verify reatomConvexClient properly depends on reatomInstance via import
-- [ ] Run `npm run build` in swaghaus - app compiles
+- [x] Run `pnpm test` in reatom/reusables - all tests pass
+- [x] Run `pnpm run jsrepo:build` - registry includes reatomConvex
+- [x] Verify reatom-convex.ts has no app-specific imports (no Auth0, no env vars, no Vite)
+- [x] Verify reatomConvexClient properly depends on reatomInstance via import
+- [x] Run `npm run build` in swaghaus - app compiles
 
 ## Cleanup
 
