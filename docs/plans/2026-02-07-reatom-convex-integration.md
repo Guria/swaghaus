@@ -44,15 +44,15 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 **Files:**
 - Create: `src/reusables/convex/reatom-convex.test.ts`
 
-- [ ] Write tests for reatomConvexClient: lazy creation, disposal on disconnect, uses reatomInstance
-- [ ] Write tests for AuthProviderState type contract (loading, authenticated, unauthenticated states)
-- [ ] Write tests for createReatomConvex factory: client creation with auth wiring, isAuthenticated two-phase tracking
-- [ ] Write tests for reatomQuery: reactive args, subscription lifecycle, error handling, data updates
-- [ ] Write tests for reatomMutation: action creation, passes args to client
-- [ ] Write tests for reatomAction: action creation, passes args to client
-- [ ] Write test for clearAuth behavior
-- [ ] Tests should mock ConvexClient (import from convex/browser)
-- [ ] Run tests - they should fail (no implementation yet)
+- [x] Write tests for reatomConvexClient: lazy creation, disposal on disconnect, uses reatomInstance
+- [x] Write tests for AuthProviderState type contract (loading, authenticated, unauthenticated states)
+- [x] Write tests for createReatomConvex factory: client creation with auth wiring, isAuthenticated two-phase tracking
+- [x] Write tests for reatomQuery: reactive args, subscription lifecycle, error handling, data updates
+- [x] Write tests for reatomMutation: action creation, passes args to client
+- [x] Write tests for reatomAction: action creation, passes args to client
+- [x] Write test for clearAuth behavior
+- [x] Tests should mock ConvexClient (import from convex/browser)
+- [x] Run tests - they should fail (no implementation yet)
 
 ## Task 3: Implement reatom-convex integration
 
