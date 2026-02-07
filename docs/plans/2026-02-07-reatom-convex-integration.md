@@ -33,11 +33,11 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 **Files:**
 - Modify: `src/reusables/instance/reatom-instance.ts` (in reatom/reusables)
 
-- [ ] Compare swaghaus version (uses withAsyncData, no withAbort) vs reusables version (uses withAbort, no withAsyncData)
-- [ ] Determine if withAsyncData is needed for async create factories (swaghaus ConvexClient is sync but the extension was added for flexibility)
-- [ ] If needed, update reatomInstance to support both patterns or note the divergence
-- [ ] Run existing reatomInstance tests - must pass
-- [ ] Update tests if reatomInstance signature changed
+- [x] Compare swaghaus version (uses withAsyncData, no withAbort) vs reusables version (uses withAbort, no withAsyncData)
+- [x] Determine if withAsyncData is needed for async create factories (swaghaus ConvexClient is sync but the extension was added for flexibility)
+- [x] If needed, update reatomInstance to support both patterns or note the divergence
+- [x] Run existing reatomInstance tests - must pass
+- [x] Update tests if reatomInstance signature changed
 
 ## Task 2: Create reatom-convex integration - tests first
 
