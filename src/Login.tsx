@@ -1,11 +1,12 @@
-import { reatomComponent } from "@reatom/react";
 import { authClientAtom } from "./convex-client";
 
-export const Login = reatomComponent(function Login() {
-  const client = authClientAtom.data();
+export const Login = () => {
   return (
-    <button className="btn" onClick={() => client?.loginWithRedirect()}>
+    <button
+      className="btn"
+      on:click={() => authClientAtom.data()?.loginWithRedirect()}
+    >
       Sign in
     </button>
   );
-})
+};
