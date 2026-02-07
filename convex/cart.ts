@@ -99,7 +99,7 @@ export const remove = mutation({
     if (cartItem === null) {
       throw new Error(`No cart item with id ${cartItemId}`);
     }
-    if (cartItem.userToken != userToken) {
+    if (cartItem.userToken !== userToken) {
       throw new Error(
         `Cart item ${cartItemId} has user ${cartItem.userToken} instead of ${userToken}`
       );
