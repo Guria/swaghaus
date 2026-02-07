@@ -1,10 +1,11 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { reatomComponent } from "@reatom/react";
+import { authClientAtom } from "./convex-client";
 
-export default function Login() {
-  const { loginWithRedirect } = useAuth0();
+export const Login = reatomComponent(function Login() {
+  const client = authClientAtom.data();
   return (
-    <button className="btn" onClick={() => loginWithRedirect()}>
+    <button className="btn" onClick={() => client?.loginWithRedirect()}>
       Sign in
     </button>
   );
-}
+})

@@ -1,9 +1,12 @@
-import { Authenticated, Unauthenticated } from "convex/react";
 import { Logout } from "./Logout";
-import Login from "./Login";
+import { Login } from "./Login";
 import { ResetButton } from "./ResetButton";
+import { reatomComponent } from "@reatom/react";
+import { client } from "./convex-client";
 
-export function Header() {
+export const Header = reatomComponent(function Header() {
+  const isAuthenticated = client.isAuthenticated();
+
   return (
     <div className="flex flex-col gap-8 pb-10">
       <div className="flex flex-col sm:flex-row justify-between items-center">
@@ -21,13 +24,14 @@ export function Header() {
               <div>Source code</div>
             </button>
           </a>
-          <Authenticated>
-            <ResetButton />
-            <Logout />
-          </Authenticated>
-          <Unauthenticated>
+          {isAuthenticated ? (
+            <>
+              <ResetButton />
+              <Logout />
+            </>
+          ) : (
             <Login />
-          </Unauthenticated>
+          )}
         </div>
       </div>
 
@@ -59,4 +63,4 @@ export function Header() {
       </div>
     </div>
   );
-}
+})

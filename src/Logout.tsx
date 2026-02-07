@@ -1,16 +1,17 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { authClientAtom } from "./convex-client";
+import { reatomComponent } from "@reatom/react";
 
-export function Logout() {
-  const { logout } = useAuth0();
+export const Logout = reatomComponent(function Logout() {
+  const client = authClientAtom.data();
 
   return (
     <button
       className="btn"
       onClick={() =>
-        logout({ logoutParams: { returnTo: window.location.origin } })
+        client?.logout({ logoutParams: { returnTo: window.location.origin } })
       }
     >
       Log out
     </button>
   );
-}
+})

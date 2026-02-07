@@ -1,15 +1,16 @@
+import { reatomFactoryComponent } from "@reatom/react";
 import { api } from "../convex/_generated/api";
-import { useQuery } from "convex/react";
 import { Item } from "./Item";
+import { reatomQuery } from "./convex-client";
 
-export function Items() {
-  const items = useQuery(api.items.list) ?? [];
+export const Items = reatomFactoryComponent(function Items() {
+  const items = reatomQuery(api.items.list, () => ({}));
 
-  return (
+  return () => (
     <div className="flex flex-col gap-4">
-      {items.map((item) => (
+      {items()?.map((item) => (
         <Item item={item} key={item._id.toString()} />
       ))}
     </div>
   );
-}
+})
