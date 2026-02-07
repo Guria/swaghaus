@@ -87,10 +87,10 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 - Modify: `src/reatom-convex.ts` (replace with import from reusables copy or keep as-is with note)
 - Modify: `src/reatomInstance.ts` (align with reusables version)
 
-- [ ] Copy the reusable reatom-convex.ts into swaghaus src/reatom-convex.ts (or set up jsrepo add)
-- [ ] Align src/reatomInstance.ts with reusables version (resolve withAbort vs withAsyncData difference)
-- [ ] Verify app builds: `npm run build`
-- [ ] Smoke test: `npm run dev` starts without errors
+- [x] Copy the reusable reatom-convex.ts into swaghaus src/reatom-convex.ts (or set up jsrepo add)
+- [x] Align src/reatomInstance.ts with reusables version (resolve withAbort vs withAsyncData difference)
+- [x] Verify app builds: `npm run build`
+- [x] Smoke test: `npm run dev` starts without errors
 
 ## Verification
 

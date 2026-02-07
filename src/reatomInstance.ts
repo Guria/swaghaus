@@ -2,10 +2,8 @@ import {
   abortVar,
   computed,
   reset,
-  withAsyncData,
+  withAbort,
   withDisconnectHook,
-  type AtomLike,
-  type Ext,
 } from "@reatom/core";
 
 /**
@@ -36,28 +34,16 @@ export const reatomInstance = <I>(
   dispose?: (instance: I) => void,
   name?: string,
 ) => {
-  const disposeFn = dispose ?? (() => { });
   const resource = computed(() => {
     const instance = create();
-    abortVar.subscribe(() => disposeFn(instance));
+    abortVar.subscribe(() => dispose?.(instance));
     return instance;
   }, name).extend(
+    withAbort(),
     withDisconnectHook(() => {
       resource.abort("disconnect");
       reset(resource);
     }),
-    withAsyncData(),
   );
   return resource;
 };
-
-type InstanceExt<I> = {
-  instance: ReturnType<typeof reatomInstance<I>>;
-};
-
-export const withInstance =
-  <T extends AtomLike, I>(
-    create: (target: T) => I,
-    dispose?: (instance: I) => void,
-  ): Ext<T, InstanceExt<I>> =>
-    (target) => ({ instance: reatomInstance(() => create(target), dispose) });
