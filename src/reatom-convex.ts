@@ -5,14 +5,16 @@ import type {
 } from "convex/server";
 import { ConvexClient } from "convex/browser";
 import {
+  abortVar,
   action,
   atom,
   computed,
   effect,
+  named,
+  peek,
   wrap,
   withConnectHook,
   type Atom,
-  named,
 } from "@reatom/core";
 import { reatomInstance } from "./reatomInstance";
 
@@ -50,10 +52,11 @@ export const reatomConvexClient = (url: string, name = "convexClient") => {
  * @param url - Convex deployment URL
  * @param authProviderState - Atom containing auth provider state
  */
-export const createReatomConvex = (
+export const reatomConvex = (
   url: string,
   authProviderState: Atom<AuthProviderState>,
 ) => {
+  const authVersion = atom(0, "convexClient.authVersion");
   const isServerAuthenticated = atom<boolean | null>(
     null,
     "convexClient.isAuthenticated",
@@ -72,24 +75,23 @@ export const createReatomConvex = (
     return serverAuthenticated === true;
   });
 
-  let authVersion = 0;
   const client = reatomConvexClient(url).extend(
     withConnectHook((client) => {
       return authProviderState.subscribe(
         ({ fetchAccessToken, isAuthenticated, isLoading }) => {
           if (!isLoading) {
             if (isAuthenticated) {
-              const currentVersion = ++authVersion;
+              const currentVersion = authVersion.set((version) => version + 1);
               client().setAuth(
                 fetchAccessToken,
                 (backendReportsIsAuthenticated) => {
-                  if (currentVersion === authVersion) {
+                  if (currentVersion === peek(authVersion)) {
                     isServerAuthenticated.set(backendReportsIsAuthenticated);
                   }
                 },
               );
             } else {
-              authVersion++;
+              authVersion.set((version) => version + 1);
               try {
                 client().client.clearAuth();
                 isServerAuthenticated.set(false);
@@ -107,7 +109,7 @@ export const createReatomConvex = (
   );
 
   const clearAuth = () => {
-    authVersion++;
+    authVersion.set((version) => version + 1);
     try {
       client().client.clearAuth();
       isServerAuthenticated.set(false);
@@ -119,9 +121,17 @@ export const createReatomConvex = (
 
   const reatomQuery = <Query extends FunctionReference<"query">>(
     query: Query,
-    argsFn: () => FunctionArgs<Query>,
-    name: string = named('convexQuery'),
+    argsOrName?: (() => FunctionArgs<Query>) | string,
+    maybeName?: string,
   ) => {
+    const argsFn =
+      typeof argsOrName === "function"
+        ? argsOrName
+        : () => ({} as FunctionArgs<Query>);
+    const name =
+      typeof argsOrName === "string"
+        ? argsOrName
+        : (maybeName ?? named("convexQuery"));
     const args = computed(argsFn, `${name}.args`);
     const result = atom<Query["_returnType"] | undefined>(
       undefined,
@@ -132,13 +142,8 @@ export const createReatomConvex = (
     });
     result.extend(
       withConnectHook(() => {
-        let unsubscribe: (() => void) | null = null;
-        const stop = effect(() => {
+        effect(() => {
           const nextArgs = args();
-          if (unsubscribe) {
-            unsubscribe();
-            unsubscribe = null;
-          }
 
           try {
             const unsub = client().onUpdate(
@@ -153,20 +158,12 @@ export const createReatomConvex = (
                 result.set(undefined);
               }),
             );
-            unsubscribe = () => unsub();
+            abortVar.subscribe(unsub);
           } catch (error) {
             result.error.set(error);
             result.set(undefined);
           }
         }, `${name}.effect`);
-
-        return () => {
-          if (unsubscribe) {
-            unsubscribe();
-            unsubscribe = null;
-          }
-          stop.unsubscribe();
-        };
       }),
     );
     return result;
@@ -174,7 +171,7 @@ export const createReatomConvex = (
 
   const reatomMutation = <Mutation extends FunctionReference<"mutation">>(
     mutation: Mutation,
-    name: string = named('convexMutation'),
+    name: string = named("convexMutation"),
   ) => {
     return action(
       (args: FunctionArgs<Mutation>): Promise<FunctionReturnType<Mutation>> =>
@@ -185,7 +182,7 @@ export const createReatomConvex = (
 
   const reatomAction = <Action extends FunctionReference<"action">>(
     convexAction: Action,
-    name: string = named('convexAction'),
+    name: string = named("convexAction"),
   ) => {
     return action(
       (args: FunctionArgs<Action>): Promise<FunctionReturnType<Action>> =>

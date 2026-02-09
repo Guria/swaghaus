@@ -9,7 +9,7 @@ export const Cart = () => {
     const auth0Client = await ensureAuthClient();
     return auth0Client.getUser();
   }).extend(withAsyncData());
-  const cartItems = reatomQuery(api.cart.list, () => ({}));
+  const cartItems = reatomQuery(api.cart.list);
 
   return (
     <div className="shadow shadow-black w-full pb-4 sm:min-h-80">

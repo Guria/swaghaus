@@ -1,5 +1,5 @@
 import { atom, assert, action } from "@reatom/core";
-import { type AuthProviderState, createReatomConvex } from "./reatom-convex";
+import { type AuthProviderState, reatomConvex } from "./reatom-convex";
 import type { Auth0Client, GetTokenSilentlyVerboseResponse } from "@auth0/auth0-spa-js";
 
 const AUTH_BOOTSTRAP_KEY = "swaghaus.auth0.bootstrap";
@@ -99,7 +99,15 @@ const createClient = async () => {
   return auth0Client;
 };
 
-const getAuthClient = async () => {
+const convexURL = import.meta.env.VITE_CONVEX_URL;
+assert(convexURL, "VITE_CONVEX_URL is not defined");
+
+export const { client, clearAuth, reatomQuery, reatomMutation, reatomAction } = reatomConvex(
+  convexURL,
+  authProviderState,
+);
+
+export const ensureAuthClient = action(() => {
   if (!authClientPromise) {
     authProviderState.set(getLoadingState());
     authClientPromise = createClient().catch((error) => {
@@ -110,22 +118,10 @@ const getAuthClient = async () => {
     });
   }
   return authClientPromise;
-};
-
-const convexURL = import.meta.env.VITE_CONVEX_URL;
-assert(convexURL, "VITE_CONVEX_URL is not defined");
-
-export const { client, clearAuth, reatomQuery, reatomMutation, reatomAction } = createReatomConvex(
-  convexURL,
-  authProviderState,
-);
-
-export const ensureAuthClient = action(() => {
-  return getAuthClient();
 }, "auth.ensureClient");
 
 export const signIn = action(async () => {
-  const auth0Client = await getAuthClient();
+  const auth0Client = await ensureAuthClient();
   return auth0Client.loginWithRedirect();
 }, "auth.signIn");
 
@@ -143,5 +139,5 @@ export const signOut = action(async () => {
 });
 
 if (hasAuthRedirectParams() || readBootstrapFlag()) {
-  void getAuthClient();
+  void ensureAuthClient();
 }

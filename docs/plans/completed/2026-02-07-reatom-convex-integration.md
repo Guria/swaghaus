@@ -2,12 +2,12 @@
 
 ## Overview
 
-Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.com/reatom/reusables) following existing jsrepo conventions. The integration provides reatomConvexClient, createReatomConvex (with reatomQuery, reatomMutation, reatomAction), and the AuthProviderState type. No bundling - distributed via jsrepo like all other reusables. Also reconcile the swaghaus reatomInstance (which uses withAsyncData instead of withAbort) with the reusables version.
+Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.com/reatom/reusables) following existing jsrepo conventions. The integration provides reatomConvexClient, reatomConvex (with reatomQuery, reatomMutation, reatomAction), and the AuthProviderState type. No bundling - distributed via jsrepo like all other reusables. Also reconcile the swaghaus reatomInstance (which uses withAsyncData instead of withAbort) with the reusables version.
 
 ## Context
 
 - **Files involved** (all in ~/ghq/github.com/reatom/reusables unless noted):
-  - Create: `src/reusables/convex/reatom-convex.ts` (reatomConvexClient + createReatomConvex factory)
+  - Create: `src/reusables/convex/reatom-convex.ts` (reatomConvexClient + reatomConvex factory)
   - Create: `src/reusables/convex/reatom-convex.meta.ts` (jsrepo registry metadata, type: reatom:integration)
   - Create: `src/reusables/convex/reatom-convex.test.ts` (vitest tests using the test reusable)
   - Create: `src/reusables/convex/reatom-convex.example.ts` (usage examples)
@@ -23,7 +23,7 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 - Follow reusables conventions exactly: test import from 'test', single quotes, no semicolons, 80-char width
 - reatomConvexClient uses reatomInstance from the existing instance reusable (registry dependency)
 - AuthProviderState is a plain type exported from the integration (generic, not tied to Auth0 or better-auth)
-- The createReatomConvex factory takes (url, authProviderState) and returns { client, clearAuth, reatomQuery, reatomMutation, reatomAction }
+- The reatomConvex factory takes (url, authProviderState) and returns { client, clearAuth, reatomQuery, reatomMutation, reatomAction }
 - Two-phase auth: tracks both client-side and server-confirmed authentication
 - **CRITICAL: every task MUST include new/updated tests**
 - **CRITICAL: all tests must pass before starting next task**
@@ -46,7 +46,7 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 
 - [x] Write tests for reatomConvexClient: lazy creation, disposal on disconnect, uses reatomInstance
 - [x] Write tests for AuthProviderState type contract (loading, authenticated, unauthenticated states)
-- [x] Write tests for createReatomConvex factory: client creation with auth wiring, isAuthenticated two-phase tracking
+- [x] Write tests for reatomConvex factory: client creation with auth wiring, isAuthenticated two-phase tracking
 - [x] Write tests for reatomQuery: reactive args, subscription lifecycle, error handling, data updates
 - [x] Write tests for reatomMutation: action creation, passes args to client
 - [x] Write tests for reatomAction: action creation, passes args to client
@@ -61,7 +61,7 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 
 - [x] Export AuthProviderState type (isLoading, isAuthenticated, fetchAccessToken)
 - [x] Implement reatomConvexClient(url, name?) using reatomInstance import
-- [x] Implement createReatomConvex(url, authProviderState) returning { client, clearAuth, reatomQuery, reatomMutation, reatomAction }
+- [x] Implement reatomConvex(url, authProviderState) returning { client, clearAuth, reatomQuery, reatomMutation, reatomAction }
   - client: wraps reatomConvexClient with withConnectHook for auth state subscription, exposes isAuthenticated computed
   - reatomQuery: reactive args via computed, effect-based subscription to ConvexClient.onUpdate, error atom, connect/disconnect lifecycle
   - reatomMutation: action wrapping client().mutation()
@@ -107,5 +107,4 @@ Add a reatom-convex integration to the reatom/reusables repo (at ~/ghq/github.co
 ## Cleanup
 
 - [x] Move this plan to `docs/plans/completed/`
-
 
